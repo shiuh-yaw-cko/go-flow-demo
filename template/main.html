@@ -10,8 +10,34 @@
 </head>
 
 <body>
+  <div>
+    <a href="/pages/one-liner.html" target="_blank">One Liner Approach</a>
+  </div>
   <form id="payment-form" method="POST">
     <input type="text" name="cko-cart-token" id="token" style="display: none;">
+
+    <label for="customername">Customer Name</label>
+    <div class="input-container frame--activated">
+      <input class="customername customer_field" id="checkout-frames-customername" name="customername">
+    </div>
+    <label for="address1">Address 1</label>
+    <div class="input-container frame--activated">
+      <input class="address1 customer_field" id="checkout-frames-address1" name="address1">
+    </div>
+    <label for="address2">Address 2</label>
+    <div class="input-container frame--activated">
+      <input class="address2 customer_field" id="checkout-frames-address2" name="address2">
+    </div>
+    <label for="postcode">Postcode</label>
+    <div class="input-container frame--activated">
+      <input class="postcode customer_field" id="checkout-frames-postcode" name="postcode">
+    </div>
+    <label for="phone">Phone</label>
+    <div class="input-container frame--activated">
+      <input class="postphonecode customer_field" id="checkout-frames-phone" name="phone">
+    </div>
+
+
     <label for="card-number">Card number</label>
     <div class="input-container card-number">
       <div class="icon-container">
@@ -53,7 +79,9 @@
         </div>
       </div>
     </div>
-
+    <label>
+      <input type="checkbox" checked="checked" name=""> Saved Card
+    </label>
     <button id="pay-button" disabled="">
       PAY GBP 25.00
     </button>
@@ -66,6 +94,7 @@
 
     <p class="success-payment-message"></p>
   </form>
+
 
   <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
   <script src="/static/js/app.js"></script>

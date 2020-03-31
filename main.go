@@ -24,6 +24,7 @@ type Response struct {
 	ResponseCode    string   `json:"response_code"`
 	ResponseSummary string   `json:"response_summary"`
 	ProcessedOn     string   `json:"processed_on"`
+	Reference       string   `json:"reference"`
 	Risk            Risk     `json:"risk"`
 	Source          Source   `json:"source"`
 	Customer        Customer `json:"customer"`
@@ -72,10 +73,10 @@ type URL struct {
 }
 
 func main() {
-
 	mainPage := template.Must(template.ParseFiles("template/main.html"))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("pages"))))
+	http.HandleFunc("/favicon.ico", doNothing)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseForm()
@@ -86,21 +87,30 @@ func main() {
 		requestPayment(r.FormValue("cko-card-token"))
 		mainPage.Execute(w, struct{ Success bool }{true})
 	})
-	http.HandleFunc("/favicon.ico", doNothing)
-	fmt.Println("Listening")
-	successPage := template.Must(template.ParseFiles("pages/success.html"))
+	// successPage := template.Must(template.ParseFiles("pages/success.html"))
 	http.HandleFunc("/pages/success.html", func(w http.ResponseWriter, r *http.Request) {
 
 		keys, ok := r.URL.Query()["cko-session-id"]
 
 		if !ok || len(keys[0]) < 1 {
-			log.Println("Url Param 'key' is missing")
 			return
 		}
 		key := keys[0]
-		log.Println("cko-session-id: " + string(key))
-		successPage.Execute(w, struct{ Success bool }{true})
+		getPaymetDetail(string(key), w)
 	})
+	oneLiner := template.Must(template.ParseFiles("pages/one-liner.html"))
+	http.HandleFunc("/pages/one-liner.html", func(w http.ResponseWriter, r *http.Request) {
+
+		r.ParseForm()
+		if r.Method != http.MethodPost {
+			oneLiner.Execute(w, nil)
+			return
+		}
+		requestPayment(r.FormValue("cko-card-token"))
+		oneLiner.Execute(w, struct{ Success bool }{true})
+	})
+
+	fmt.Println("Listening")
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -162,7 +172,7 @@ func requestPayment(token string) {
 
 	var response Response
 	err = json.Unmarshal(data, &response)
-	fmt.Println(response)
+	log.Println(response.Links.RedirectURL.URLString)
 	switch response.Status {
 	case "Pending":
 		fmt.Println(response.ID)
@@ -194,4 +204,54 @@ func open(url string) error {
 	}
 	args = append(args, url)
 	return exec.Command(cmd, args...).Start()
+}
+
+func outputHTML(w http.ResponseWriter, filename string, data interface{}) {
+	t, err := template.ParseFiles(filename)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	if err := t.Execute(w, data); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+}
+
+func getPaymetDetail(session string, w http.ResponseWriter) {
+	if len(session) < 0 {
+		log.Printf("Empty session")
+		return
+	}
+
+	url := "https://api.sandbox.checkout.com/payments/" + session
+	httpMethod := "GET"
+	contentType := "application/json"
+	sKey := "sk_test_b4bc5b1d-e509-4df3-9690-073fa5cb0fe9"
+
+	req, err := http.NewRequest(httpMethod, url, nil)
+	if err != nil {
+		log.Printf("http.NewRequest() error: %v\n", err)
+		return
+	}
+	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Authorization", sKey)
+	c := &http.Client{}
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("http.Do() error: %v\n", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("ioutil.ReadAll() error: %v\n", err)
+		return
+	}
+
+	var response Response
+	err = json.Unmarshal(data, &response)
+	fmt.Println(response)
+	outputHTML(w, "pages/success.html", response)
 }

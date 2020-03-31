@@ -147,5 +147,33 @@ function paymentMethodChanged(event) {
 form.addEventListener("submit", onSubmit);
 function onSubmit(event) {
   event.preventDefault();
+  var name = document.getElementById("checkout-frames-customername").value;
+  console.log(name)
+
+  var address1 = document.getElementById("checkout-frames-address1").value;
+  console.log(address1)
+
+  var address2 = document.getElementById("checkout-frames-address2").value;
+  console.log(address2)
+
+  var postcode = document.getElementById("checkout-frames-postcode").value;
+  console.log(postcode)
+
+  var phone = document.getElementById("checkout-frames-phone").value;
+  console.log(phone)
+
+  Frames.cardholder = {
+    name: name,
+    billingAddress: {
+      addressLine1: address1,
+      addressLine2: address2,
+      zip: postcode,
+      city: "Singapore",
+      state: "Singapore",
+      country: "SG",
+    },
+    phone: phone
+  };
+
   Frames.submitCard();
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Frames v2: Multi Input</title>
+  <link rel="stylesheet" href="/static/stylesheets/normalize.css">
+  <link rel="stylesheet" href="/static/stylesheets/style.css">
+</head>
+
+<body>
+  <form id="payment-form" method="POST">
+    <div class="one-liner">
+      <div class="card-frame">
+        <!-- form will be added here -->
+      </div>
+      <!-- add submit button -->  
+      <button id="pay-button" disabled>
+        PAY GBP 24.99
+      </button>
+    </div>
+    <p class="success-payment-message"></p>
+  </form>
+
+  <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+
+</html>
