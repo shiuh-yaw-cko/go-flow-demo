@@ -1,7 +1,7 @@
 var payButton = document.getElementById("pay-button");
 var form = document.getElementById("payment-form");
 
-Frames.init("pk_test_db741f7b-28b2-4c0c-9fe2-c40c75f4e5b2");
+Frames.init("pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4");
 
 var logos = generateLogos();
 function generateLogos() {
@@ -147,7 +147,7 @@ function paymentMethodChanged(event) {
 form.addEventListener("submit", onSubmit);
 function onSubmit(event) {
   event.preventDefault();
-  var name = document.getElementById("checkout-frames-customername").value;
+  var name = document.getElementById("checkout-frames-customer-name").value;
   console.log(name)
 
   var address1 = document.getElementById("checkout-frames-address1").value;
@@ -162,15 +162,21 @@ function onSubmit(event) {
   var phone = document.getElementById("checkout-frames-phone").value;
   console.log(phone)
 
+  var city = document.getElementById("city").value;
+  console.log(city)
+
+  var country = document.getElementById("country-code").value;
+  console.log(country)
+
+
   Frames.cardholder = {
     name: name,
     billingAddress: {
       addressLine1: address1,
       addressLine2: address2,
       zip: postcode,
-      city: "Singapore",
-      state: "Singapore",
-      country: "SG",
+      city: city,
+      country: country,
     },
     phone: phone
   };

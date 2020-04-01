@@ -18,7 +18,7 @@
 
     <label for="customername">Customer Name</label>
     <div class="input-container frame--activated">
-      <input class="customername customer_field" id="checkout-frames-customername" name="customername">
+      <input class="customername customer_field" id="checkout-frames-customer-name" name="customername">
     </div>
     <label for="address1">Address 1</label>
     <div class="input-container frame--activated">
@@ -31,13 +31,20 @@
     <label for="postcode">Postcode</label>
     <div class="input-container frame--activated">
       <input class="postcode customer_field" id="checkout-frames-postcode" name="postcode">
+    </div> 
+    <label for="city">City</label>
+    <div class="input-container frame--activated">
+      <input id="city" class="city customer_field" id="checkout-frames-city" name="city">
+    </div> 
+    <label for="country">Country</label>
+    <div class="input-container frame--activated autocomplete">
+      <input id="country" class="country customer_field" id="checkout-frames-country" name="country">
+      <input id="country-code" type="hidden">
     </div>
     <label for="phone">Phone</label>
     <div class="input-container frame--activated">
-      <input class="postphonecode customer_field" id="checkout-frames-phone" name="phone">
+      <input class="phone customer_field" id="checkout-frames-phone" name="phone">
     </div>
-
-
     <label for="card-number">Card number</label>
     <div class="input-container card-number">
       <div class="icon-container">
@@ -98,6 +105,7 @@
 
   <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
   <script src="/static/js/app.js"></script>
+  <script src="/static/js/autocomplete.js"></script>
 </body>
 
 </html>

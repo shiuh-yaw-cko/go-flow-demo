@@ -126,7 +126,7 @@ func requestPayment(token string) {
 	url := "https://api.sandbox.checkout.com/payments"
 	httpMethod := "POST"
 	contentType := "application/json"
-	sKey := "sk_test_b4bc5b1d-e509-4df3-9690-073fa5cb0fe9"
+	sKey := "sk_test_79ab19cc-5c16-4b81-8110-31666040bb6a"
 	body := map[string]interface{}{
 		"source": map[string]string{
 			"type":  "token",
@@ -227,7 +227,7 @@ func getPaymetDetail(session string, w http.ResponseWriter) {
 	url := "https://api.sandbox.checkout.com/payments/" + session
 	httpMethod := "GET"
 	contentType := "application/json"
-	sKey := "sk_test_b4bc5b1d-e509-4df3-9690-073fa5cb0fe9"
+	sKey := "sk_test_79ab19cc-5c16-4b81-8110-31666040bb6a"
 
 	req, err := http.NewRequest(httpMethod, url, nil)
 	if err != nil {
