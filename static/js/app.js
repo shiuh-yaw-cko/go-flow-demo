@@ -3,6 +3,29 @@ var form = document.getElementById("payment-form");
 
 Frames.init("pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4");
 
+Frames.addEventHandler(
+  Frames.Events.FRAME_ACTIVATED,
+  onActivated
+);
+function onActivated(event) {
+  var e = event.element;
+  console.log('onActivated');
+  console.log(e);
+  console.log(event);
+}
+
+Frames.addEventHandler(
+  Frames.Events.READY,
+  onReady
+);
+function onReady(event) {
+  var e = event.element;
+  console.log('onReady');
+  console.log(e)
+  console.log(event);
+
+}
+
 var logos = generateLogos();
 function generateLogos() {
   var logos = {};
@@ -119,6 +142,7 @@ Frames.addEventHandler(
 );
 function onCardTokenizationFailed(error) {
   console.log("CARD_TOKENIZATION_FAILED: %o", error);
+  Frames.init();
   Frames.enableSubmitForm();
 }
 
@@ -144,30 +168,24 @@ function paymentMethodChanged(event) {
   }
 }
 
+Frames.addEventHandler(
+  Frames.Events.CARD_SUBMITTED,
+  function () {
+    payButton.disabled = true;
+    // display loader
+  }
+);
+
 form.addEventListener("submit", onSubmit);
 function onSubmit(event) {
   event.preventDefault();
   var name = document.getElementById("checkout-frames-customer-name").value;
-  console.log(name)
-
   var address1 = document.getElementById("checkout-frames-address1").value;
-  console.log(address1)
-
   var address2 = document.getElementById("checkout-frames-address2").value;
-  console.log(address2)
-
   var postcode = document.getElementById("checkout-frames-postcode").value;
-  console.log(postcode)
-
   var phone = document.getElementById("checkout-frames-phone").value;
-  console.log(phone)
-
   var city = document.getElementById("city").value;
-  console.log(city)
-
   var country = document.getElementById("country-code").value;
-  console.log(country)
-
 
   Frames.cardholder = {
     name: name,
@@ -182,4 +200,43 @@ function onSubmit(event) {
   };
 
   Frames.submitCard();
+}
+
+document.getElementById("clear-button").addEventListener("click", clear);
+
+function clear() {
+  form.reset();
+  Frames.init("pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4");
+}
+
+document.getElementById("clear-configuration-button").addEventListener("click", clearConfig);
+
+function clearConfig() {
+  form.reset();
+  Frames.init({
+    publicKey: "pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4",
+    style: {
+      base: {
+        color: "black",
+        fontSize: "18px"
+      },
+      focus: {
+        color: "blue"
+      },
+      valid: {
+        color: "green"
+      },
+      invalid: {
+        color: "red"
+      },
+      placeholder: {
+        base: {
+          color: "gray"
+        },
+        focus: {
+          border: "solid 1px blue"
+        }
+      }
+    }
+  })
 }

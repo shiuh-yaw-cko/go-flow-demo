@@ -58,7 +58,7 @@ type Source struct {
 type Customer struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
-	Name  int    `json:"name"`
+	Name  string `json:"name"`
 }
 
 // Links ...

@@ -214,6 +214,36 @@ div + button {
   cursor: pointer;
 }
 
+#clear-button, #clear-configuration-button {
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 500;
+  height: 40px;
+  width: 100%;
+  background-color: #13395e;
+  box-shadow: 0 1px 3px 0 rgba(19, 57, 94, 0.4);
+}
+
+#clear-button:active, #clear-configuration-button:active {
+  background-color: #0b2a49;
+  box-shadow: 0 1px 3px 0 rgba(19, 57, 94, 0.4);
+}
+
+#clear-button:hover, #clear-configuration-button:hover {
+  background-color: #15406b;
+  box-shadow: 0 2px 5px 0 rgba(19, 57, 94, 0.4);
+}
+
+#clear-button:disabled, #clear-configuration-button:disabled {
+  background-color: #697887;
+  box-shadow: none;
+}
+
+#clear-button:not(:disabled), #clear-configuration-button::not(:disabled) {
+  cursor: pointer;
+}
+
 .success-payment-message {
   color: #13395e;
   line-height: 1.4;
