@@ -98,6 +98,17 @@ func main() {
 		key := keys[0]
 		getPaymetDetail(string(key), w)
 	})
+	http.HandleFunc("/pages/error.html", func(w http.ResponseWriter, r *http.Request) {
+
+		keys, ok := r.URL.Query()["cko-session-id"]
+
+		if !ok || len(keys[0]) < 1 {
+			return
+		}
+		key := keys[0]
+		getPaymetDetail(string(key), w)
+	})
+
 	oneLiner := template.Must(template.ParseFiles("pages/one-liner.html"))
 	http.HandleFunc("/pages/one-liner.html", func(w http.ResponseWriter, r *http.Request) {
 
@@ -118,6 +129,8 @@ func doNothing(w http.ResponseWriter, r *http.Request) {}
 
 func requestPayment(token string) {
 
+	fmt.Println(token)
+
 	if len(token) < 0 {
 		log.Printf("Empty Token")
 		return
@@ -126,13 +139,13 @@ func requestPayment(token string) {
 	url := "https://api.sandbox.checkout.com/payments"
 	httpMethod := "POST"
 	contentType := "application/json"
-	sKey := "sk_test_79ab19cc-5c16-4b81-8110-31666040bb6a"
+	sKey := "sk_test_dfa94177-998c-4781-aa04-970d47df6585"
 	body := map[string]interface{}{
 		"source": map[string]string{
 			"type":  "token",
 			"token": token,
 		},
-		"amount":    "2500",
+		"amount":    "20051",
 		"currency":  "GBP",
 		"reference": "Test Order",
 		"3ds": map[string]bool{
@@ -227,7 +240,7 @@ func getPaymetDetail(session string, w http.ResponseWriter) {
 	url := "https://api.sandbox.checkout.com/payments/" + session
 	httpMethod := "GET"
 	contentType := "application/json"
-	sKey := "sk_test_79ab19cc-5c16-4b81-8110-31666040bb6a"
+	sKey := "sk_test_dfa94177-998c-4781-aa04-970d47df6585"
 
 	req, err := http.NewRequest(httpMethod, url, nil)
 	if err != nil {
@@ -253,5 +266,10 @@ func getPaymetDetail(session string, w http.ResponseWriter) {
 	var response Response
 	err = json.Unmarshal(data, &response)
 	fmt.Println(response)
-	outputHTML(w, "pages/success.html", response)
+	switch response.Status {
+	case "Declined":
+		outputHTML(w, "pages/error.html", response)
+	default: // "linux", "freebsd", "openbsd", "netbsd"
+		outputHTML(w, "pages/success.html", response)
+	}
 }

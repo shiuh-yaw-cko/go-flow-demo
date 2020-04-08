@@ -1,7 +1,8 @@
 var payButton = document.getElementById("pay-button");
 var form = document.getElementById("payment-form");
+var pk = "pk_test_8a3d22b3-5684-4c25-9b21-1fa98776225c";
 
-Frames.init("pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4");
+Frames.init(pk);
 
 Frames.addEventHandler(
   Frames.Events.FRAME_ACTIVATED,
@@ -206,7 +207,7 @@ document.getElementById("clear-button").addEventListener("click", clear);
 
 function clear() {
   form.reset();
-  Frames.init("pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4");
+  Frames.init(pk);
 }
 
 document.getElementById("clear-configuration-button").addEventListener("click", clearConfig);
@@ -214,7 +215,7 @@ document.getElementById("clear-configuration-button").addEventListener("click", 
 function clearConfig() {
   form.reset();
   Frames.init({
-    publicKey: "pk_test_291004cb-8a16-44c3-8c64-37ec45b47cd4",
+    publicKey: pk,
     style: {
       base: {
         color: "black",
