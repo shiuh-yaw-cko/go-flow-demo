@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,6 +11,12 @@ import (
 	"os/exec"
 	"runtime"
 	"text/template"
+)
+
+var (
+	certFile = flag.String("cert", "someCertFile", "A PEM eoncoded certificate file.")
+	keyFile  = flag.String("key", "someKeyFile", "A PEM encoded private key file.")
+	caFile   = flag.String("CA", "someCertCAFile", "A PEM eoncoded CA's certificate file.")
 )
 
 // Response ...
@@ -73,6 +80,7 @@ type URL struct {
 }
 
 func main() {
+
 	mainPage := template.Must(template.ParseFiles("template/main.html"))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("pages"))))
@@ -121,7 +129,7 @@ func main() {
 		oneLiner.Execute(w, struct{ Success bool }{true})
 	})
 
-	fmt.Println("Listening")
+	fmt.Println("Listening Port 8080")
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -139,13 +147,13 @@ func requestPayment(token string) {
 	url := "https://api.sandbox.checkout.com/payments"
 	httpMethod := "POST"
 	contentType := "application/json"
-	sKey := "sk_test_dfa94177-998c-4781-aa04-970d47df6585"
+	sKey := "sk_test_b9f14ee8-93a4-42c5-8825-e14133c37320"
 	body := map[string]interface{}{
 		"source": map[string]string{
 			"type":  "token",
 			"token": token,
 		},
-		"amount":    "20051",
+		"amount":    "2500",
 		"currency":  "GBP",
 		"reference": "Test Order",
 		"3ds": map[string]bool{
@@ -239,15 +247,15 @@ func getPaymetDetail(session string, w http.ResponseWriter) {
 
 	url := "https://api.sandbox.checkout.com/payments/" + session
 	httpMethod := "GET"
-	contentType := "application/json"
-	sKey := "sk_test_dfa94177-998c-4781-aa04-970d47df6585"
+	// contentType := "application/json"
+	sKey := "sk_test_b9f14ee8-93a4-42c5-8825-e14133c37320"
 
 	req, err := http.NewRequest(httpMethod, url, nil)
 	if err != nil {
 		log.Printf("http.NewRequest() error: %v\n", err)
 		return
 	}
-	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Content-Type", "")
 	req.Header.Add("Authorization", sKey)
 	c := &http.Client{}
 	resp, err := c.Do(req)
@@ -269,7 +277,7 @@ func getPaymetDetail(session string, w http.ResponseWriter) {
 	switch response.Status {
 	case "Declined":
 		outputHTML(w, "pages/error.html", response)
-	default: // "linux", "freebsd", "openbsd", "netbsd"
+	default:
 		outputHTML(w, "pages/success.html", response)
 	}
 }

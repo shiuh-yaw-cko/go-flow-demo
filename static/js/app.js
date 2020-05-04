@@ -1,30 +1,23 @@
 var payButton = document.getElementById("pay-button");
 var form = document.getElementById("payment-form");
-var pk = "pk_test_8a3d22b3-5684-4c25-9b21-1fa98776225c";
+var pk = "pk_test_7bb5881a-835c-4a4a-8d8c-1fb90c318082";
 
 Frames.init(pk);
 
-Frames.addEventHandler(
-  Frames.Events.FRAME_ACTIVATED,
-  onActivated
-);
+Frames.addEventHandler(Frames.Events.FRAME_ACTIVATED, onActivated);
 function onActivated(event) {
   var e = event.element;
-  console.log('onActivated');
+  console.log("onActivated");
   console.log(e);
   console.log(event);
 }
 
-Frames.addEventHandler(
-  Frames.Events.READY,
-  onReady
-);
+Frames.addEventHandler(Frames.Events.READY, onReady);
 function onReady(event) {
   var e = event.element;
-  console.log('onReady');
-  console.log(e)
+  console.log("onReady");
+  console.log(e);
   console.log(event);
-
 }
 
 var logos = generateLogos();
@@ -32,15 +25,15 @@ function generateLogos() {
   var logos = {};
   logos["card-number"] = {
     src: "card",
-    alt: "card number logo"
+    alt: "card number logo",
   };
   logos["expiry-date"] = {
     src: "exp-date",
-    alt: "expiry date logo"
+    alt: "expiry date logo",
   };
   logos["cvv"] = {
     src: "cvv",
-    alt: "cvv logo"
+    alt: "cvv logo",
   };
   return logos;
 }
@@ -113,14 +106,20 @@ function setErrorMessage(el) {
 function setDefaultIcon(el) {
   var selector = "icon-" + el;
   var logo = document.getElementById(selector);
-  logo.setAttribute("src", "/static/images/card-icons/" + logos[el].src + ".svg");
+  logo.setAttribute(
+    "src",
+    "/static/images/card-icons/" + logos[el].src + ".svg"
+  );
   logo.setAttribute("alt", logos[el].alt);
 }
 
 function setDefaultErrorIcon(el) {
   var selector = "icon-" + el;
   var logo = document.getElementById(selector);
-  logo.setAttribute("src", "/static/images/card-icons/" + logos[el].src + "-error.svg");
+  logo.setAttribute(
+    "src",
+    "/static/images/card-icons/" + logos[el].src + "-error.svg"
+  );
   logo.setAttribute("alt", logos[el].alt);
 }
 
@@ -149,6 +148,7 @@ function onCardTokenizationFailed(error) {
 
 Frames.addEventHandler(Frames.Events.CARD_TOKENIZED, onCardTokenized);
 function onCardTokenized(event) {
+  console.log("onCardTokenized Event: %o", event);
   Frames.addCardToken(form, event.token);
   form.submit();
 }
@@ -169,13 +169,10 @@ function paymentMethodChanged(event) {
   }
 }
 
-Frames.addEventHandler(
-  Frames.Events.CARD_SUBMITTED,
-  function () {
-    payButton.disabled = true;
-    // display loader
-  }
-);
+Frames.addEventHandler(Frames.Events.CARD_SUBMITTED, function () {
+  payButton.disabled = true;
+  // display loader
+});
 
 form.addEventListener("submit", onSubmit);
 function onSubmit(event) {
@@ -197,7 +194,7 @@ function onSubmit(event) {
       city: city,
       country: country,
     },
-    phone: phone
+    phone: phone,
   };
 
   Frames.submitCard();
@@ -210,7 +207,9 @@ function clear() {
   Frames.init(pk);
 }
 
-document.getElementById("clear-configuration-button").addEventListener("click", clearConfig);
+document
+  .getElementById("clear-configuration-button")
+  .addEventListener("click", clearConfig);
 
 function clearConfig() {
   form.reset();
@@ -219,25 +218,25 @@ function clearConfig() {
     style: {
       base: {
         color: "black",
-        fontSize: "18px"
+        fontSize: "18px",
       },
       focus: {
-        color: "blue"
+        color: "blue",
       },
       valid: {
-        color: "green"
+        color: "green",
       },
       invalid: {
-        color: "red"
+        color: "red",
       },
       placeholder: {
         base: {
-          color: "gray"
+          color: "gray",
         },
         focus: {
-          border: "solid 1px blue"
-        }
-      }
-    }
-  })
+          border: "solid 1px blue",
+        },
+      },
+    },
+  });
 }
